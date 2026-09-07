@@ -1,26 +1,154 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #eceef2;
+  --line: rgba(20, 28, 44, 0.09);
+  --fg: #1a2130;
+  --muted: #667085;
+  /* Indus Analytics brand navy, lifted for legibility */
+  --accent: #1f5aa6;
+  --accent-strong: #003366;
+  --accent-dim: rgba(31, 90, 166, 0.1);
+  --grid: rgba(20, 28, 44, 0.05);
+}
+
+[data-theme="dark"] {
+  --bg: #07090c;
+  --surface: #0e1116;
+  --surface-2: #151a22;
+  --line: rgba(255, 255, 255, 0.09);
+  --fg: #f2f4f7;
+  --muted: #8b93a1;
+  --accent: #6699cc;
+  --accent-strong: #8ab4e6;
+  --accent-dim: rgba(102, 153, 204, 0.14);
+  --grid: rgba(255, 255, 255, 0.05);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-dim: var(--accent-dim);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  color: var(--fg);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+::selection {
+  background: var(--accent-dim);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.display {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.marquee-reverse {
+  animation: marquee 48s linear infinite reverse;
+}
+
+.lift {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
+}
+
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -20px rgba(31, 90, 166, 0.35);
+  border-color: rgba(31, 90, 166, 0.45);
+}
+
+.glow {
+  position: absolute;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(4rem, 3rem, 0) scale(1.15); }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.caret::after {
+  content: "▌";
+  animation: blink 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }
