@@ -13,7 +13,7 @@ export const profile = {
   github: "https://github.com/",
   linkedin: "https://www.linkedin.com/",
   resumeFile: "/Abhinav-Patidar-Resume.docx",
-  photo: "/abhinav-portrait.png",
+  photo: "/abhinav-portrait.jpg",
   avatar: "/avatar.svg",
   // TODO: replace with the deployed domain
   siteUrl: "https://abhinavpatidar.dev",
