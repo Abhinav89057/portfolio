@@ -8,29 +8,28 @@ import { openPalette } from "@/components/command-palette/command-palette";
 import { LocalTime } from "@/components/ui/local-time";
 
 const links = [
-  { href: "#about", label: "About" },
-  { href: "#process", label: "Process" },
-  { href: "#skills", label: "Skills" },
-  { href: "#products", label: "Products" },
+  { href: "#estimo", label: "Estimo" },
+  { href: "#work", label: "Work" },
+  { href: "#lab", label: "Lab" },
+  { href: "#thinking", label: "How I think" },
   { href: "#experience", label: "Experience" },
 ];
 
 function ThemeToggle() {
-  const [dark, setDark] = useState(false);
+  const [light, setLight] = useState(false);
   useEffect(() => {
-    const sync = () => setDark(document.documentElement.dataset.theme === "dark");
-    const id = requestAnimationFrame(sync);
+    const id = requestAnimationFrame(() => setLight(document.documentElement.dataset.theme === "light"));
     return () => cancelAnimationFrame(id);
   }, []);
   const toggle = () => {
-    const next = dark ? "light" : "dark";
+    const next = light ? "dark" : "light";
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem("theme", next); } catch {}
-    setDark(!dark);
+    setLight(!light);
   };
   return (
-    <button type="button" onClick={toggle} aria-label={dark ? "Switch to light theme" : "Switch to dark theme"} className="inline-flex size-11 items-center justify-center rounded-full border border-line bg-surface text-muted transition-colors hover:text-fg">
-      {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
+    <button type="button" onClick={toggle} aria-label={light ? "Switch to dark theme" : "Switch to light theme"} className="inline-flex size-11 items-center justify-center border border-line text-muted transition-colors hover:text-fg">
+      {light ? <Moon className="size-4" /> : <Sun className="size-4" />}
     </button>
   );
 }
@@ -49,23 +48,23 @@ export function TopBar() {
   return (
     <header className={cn("fixed inset-x-0 top-0 z-40 transition-colors", (scrolled || open) && "border-b border-line bg-bg/85 backdrop-blur-md")}>
       <nav aria-label="Primary" className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 md:px-8">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-5">
           <Link href="/" className="display text-xl">Abhinav</Link>
-          <span className="hidden font-mono text-[11px] uppercase tracking-[0.2em] text-muted lg:inline">Local / <LocalTime /></span>
+          <span className="hidden text-xs text-muted lg:inline"><LocalTime /></span>
         </div>
         <ul className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-fg">{l.label}</a>
+              <a href={l.href} className="px-3 py-2 text-sm text-muted transition-colors hover:text-fg">{l.label}</a>
             </li>
           ))}
         </ul>
         <div className="flex items-center gap-2">
-          <button type="button" onClick={openPalette} className="hidden min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-3 font-mono text-xs text-muted transition-colors hover:text-fg md:inline-flex" aria-label="Open command palette">
+          <button type="button" onClick={openPalette} className="hidden min-h-11 items-center gap-2 border border-line px-3 font-mono text-xs text-muted transition-colors hover:text-fg md:inline-flex" aria-label="Open command palette">
             <Command className="size-3.5" aria-hidden /> K
           </button>
           <ThemeToggle />
-          <a href="#contact" className="hidden min-h-11 items-center rounded-full bg-fg px-5 text-sm font-medium text-bg transition-colors hover:bg-accent md:inline-flex">Contact now</a>
+          <a href="#contact" className="hidden min-h-11 items-center bg-fg px-5 text-sm font-medium text-bg transition-colors hover:bg-accent md:inline-flex">Get in touch</a>
           <button type="button" className="inline-flex size-11 items-center justify-center md:hidden" aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((o) => !o)}>
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>

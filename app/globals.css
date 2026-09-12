@@ -1,30 +1,34 @@
 @import "tailwindcss";
 
+/* Dark graphite by default. Light is the toggle. */
 :root {
-  --bg: #f4f5f7;
-  --surface: #ffffff;
-  --surface-2: #eceef2;
-  --line: rgba(20, 28, 44, 0.09);
-  --fg: #1a2130;
-  --muted: #667085;
-  /* Indus Analytics brand navy, lifted for legibility */
-  --accent: #1f5aa6;
-  --accent-strong: #003366;
-  --accent-dim: rgba(31, 90, 166, 0.1);
-  --grid: rgba(20, 28, 44, 0.05);
+  --bg: #0c0e11;
+  --surface: #12151a;
+  --surface-2: #181c22;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --fg: #ecebe6;
+  --muted: #8b919b;
+  --accent: #e9a23b;
+  --accent-dim: rgba(233, 162, 59, 0.12);
+  --grid: rgba(126, 158, 199, 0.07);
+  --grid-major: rgba(126, 158, 199, 0.14);
+  --noise-opacity: 0.05;
 }
 
-[data-theme="dark"] {
-  --bg: #07090c;
-  --surface: #0e1116;
-  --surface-2: #151a22;
-  --line: rgba(255, 255, 255, 0.09);
-  --fg: #f2f4f7;
-  --muted: #8b93a1;
-  --accent: #6699cc;
-  --accent-strong: #8ab4e6;
-  --accent-dim: rgba(102, 153, 204, 0.14);
-  --grid: rgba(255, 255, 255, 0.05);
+[data-theme="light"] {
+  --bg: #f2f1ec;
+  --surface: #fbfaf7;
+  --surface-2: #ebeae4;
+  --line: rgba(20, 22, 26, 0.1);
+  --line-strong: rgba(20, 22, 26, 0.24);
+  --fg: #15171b;
+  --muted: #626873;
+  --accent: #b0700f;
+  --accent-dim: rgba(176, 112, 15, 0.1);
+  --grid: rgba(30, 50, 80, 0.07);
+  --grid-major: rgba(30, 50, 80, 0.13);
+  --noise-opacity: 0.035;
 }
 
 @theme inline {
@@ -32,10 +36,10 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
-  --color-accent-strong: var(--accent-strong);
   --color-accent-dim: var(--accent-dim);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -44,102 +48,119 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
+  position: relative;
   background-color: var(--bg);
-  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 64px 64px;
+  /* Blueprint grid: fine 32px minor lines, 160px major lines. */
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
   color: var(--fg);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* Grain. One SVG turbulence layer, fixed, never repaints on scroll. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
 ::selection {
-  background: var(--accent-dim);
+  background: var(--accent);
+  color: var(--bg);
 }
 
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
+/* Display: wide grotesk, heavy. Carries the personality of the page. */
 .display {
   font-family: var(--font-display), var(--font-geist-sans), sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1;
+  font-weight: 760;
+  font-stretch: 118%;
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  text-wrap: balance;
 }
 
-.card {
-  background: var(--surface);
+.display-wide {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  font-weight: 640;
+  font-stretch: 125%;
+  letter-spacing: 0.01em;
+}
+
+/* Panel: the one surface treatment. Square corners, one hairline. */
+.panel {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
   border: 1px solid var(--line);
 }
 
-.marquee {
-  animation: marquee 40s linear infinite;
-}
-
-.marquee-reverse {
-  animation: marquee 48s linear infinite reverse;
-}
-
-.lift {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
-}
-
-.lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -20px rgba(31, 90, 166, 0.35);
-  border-color: rgba(31, 90, 166, 0.45);
-}
-
-.glow {
+/* Cursor spotlight for the hero grid. --mx/--my set from JS. */
+.spot {
   position: absolute;
-  width: 34rem;
-  height: 34rem;
-  border-radius: 9999px;
-  filter: blur(90px);
+  inset: 0;
   pointer-events: none;
-  animation: drift 18s ease-in-out infinite alternate;
+  background-image:
+    linear-gradient(var(--accent) 1px, transparent 1px),
+    linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.22;
+  -webkit-mask-image: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 70%);
+  mask-image: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px), #000 0%, transparent 70%);
 }
 
-@keyframes drift {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(4rem, 3rem, 0) scale(1.15); }
+/* Engineer mode: annotate every section with its id, like a drawing sheet. */
+[data-engineer="on"] main section[id] {
+  position: relative;
+  outline: 1px dashed var(--line-strong);
+  outline-offset: -1px;
 }
 
-.float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
+[data-engineer="on"] main section[id]::before {
+  content: "#" attr(id);
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2px 8px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--bg);
+  background: var(--accent);
+  z-index: 2;
 }
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  50% { opacity: 0.3; }
 }
 
 .pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-.caret::after {
-  content: "▌";
-  animation: blink 1s steps(1) infinite;
+  animation: pulse-dot 2.4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -150,5 +171,8 @@ body {
   }
   html {
     scroll-behavior: auto;
+  }
+  .spot {
+    display: none;
   }
 }
